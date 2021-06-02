@@ -1,4 +1,4 @@
-allenlp==0.9.0
+allennlp==0.9.0
 flair
 streamlit>=0.82.0
 torch
