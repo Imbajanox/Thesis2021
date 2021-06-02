@@ -6,7 +6,6 @@ from flair.embeddings import FlairEmbeddings, TransformerDocumentEmbeddings, ELM
 
 
 
-
 bert_embedding = TransformerDocumentEmbeddings('bert-base-cased')
 
 elmo_embedding = DocumentPoolEmbeddings([ELMoEmbeddings('')])
@@ -18,20 +17,6 @@ sentence2 = Sentence('a random sentence with two drops of sugar.')
 sent1 = st.text_input(f"Write a sentence", "The grass is green.")
 
 sent2 = st.text_input(f"Write another sentence", "The grass is not green.")
-
-
-
-    
-    
-#assert sentence1.embedding.shape == sentence2.embedding.shape
-
-
-
-
-
-
-
-
 
 
 
@@ -62,19 +47,8 @@ def runComp(s1, s2):
     
     return
 
-#print('Similarity1: ')
-#print(similarities1)
 
-#print('Similarity2: ')
-#print(similarities2)
 
 if st.button('Run'):
     runComp(sent1, sent2)
     
-#for token in sentence1:
-#    print(token)
-#    print(token.embedding)
-    
-#for token in sentence2:
-#    print(token)
-#    print(token.embedding)
