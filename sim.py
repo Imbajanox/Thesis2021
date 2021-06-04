@@ -6,7 +6,7 @@ from flair.embeddings import FlairEmbeddings, TransformerDocumentEmbeddings, ELM
 
 
 
-bert_embedding = TransformerDocumentEmbeddings('bert-base-cased')
+bert_embedding = TransformerDocumentEmbeddings('bert-base-uncased', layers='-1,-2,-3,-4')
 
 elmo_embedding = DocumentPoolEmbeddings([ELMoEmbeddings('')])
 
