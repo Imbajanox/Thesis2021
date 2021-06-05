@@ -3,15 +3,9 @@ import torch
 from flair.data import Sentence
 from flair.embeddings import FlairEmbeddings, TransformerDocumentEmbeddings, ELMoEmbeddings, DocumentPoolEmbeddings
 
-
-
 bert_embedding = TransformerDocumentEmbeddings('bert-base-uncased', layers='-1,-2,-3,-4')
 
 elmo_embedding = DocumentPoolEmbeddings([ELMoEmbeddings('')])
-
-sentence1 = Sentence('The grass is green.')
-sentence2 = Sentence('a random sentence with two drops of sugar.')
-
 
 sent1 = st.text_input(f"Write a sentence", "The grass is green.")
 
@@ -36,13 +30,11 @@ def runComp(s1, s2):
     cos2 = torch.nn.CosineSimilarity(dim=0, eps=1e-6)
     prox2 = cos2(a.embedding, b.embedding)
     similarities2 = round(prox2.item(), 4)
-    #data = {'BERT':[similarities1], 'ELMo': [similarities2]}
     
-    #mydata = pd.DataFrame(data)
     
     st.text('Below you see the similarity between the two sentences you entered:')
     
-    #st.dataframe(mydata)
+    
     st.json({'Bert':similarities1,'ELMo':similarities2})
     return
 
