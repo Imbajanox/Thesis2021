@@ -4,6 +4,32 @@ import plotly.graph_objs as go
 from flair.data import Sentence
 from flair.embeddings import FlairEmbeddings, TransformerDocumentEmbeddings, ELMoEmbeddings, DocumentPoolEmbeddings, WordEmbeddings
 
+from stability import similarWords, stability
+from nltk.corpus import brown
+from gensim.models import word2vec
+#### Static Word Embeddings Code below ####
+sentences = brown.sents()
+sentences = [[word.lower() for word in sentence] for sentence in sentences]
+
+model1 = word2vec.Word2Vec(sentences, size=100,window=5,min_count=1, seed=42)
+model2 = word2vec.Word2Vec(sentences, size=100,window=5,min_count=1, seed=102)
+
+all_words = set([word for sentence in sentences for word in sentence])
+
+model1_dict = {}
+model2_dict = {}
+
+for word in all_words:
+    model1_dict[word] = model1.wv[word]
+    model2_dict[word] = model2.wv[word]
+
+mostSimilar1 = similarWords(model1_dict,'president')
+mostSimilar2 = similarWords(model2_dict,'president')
+
+stab = stability('president',[mostSimilar1,mostSimilar2],[mostSimilar1,mostSimilar2],True)
+print('"president" has a sability of ' + str(stab*10) + '%')
+
+#### Contextual Word Embeddings Code below ####
 embedding_list = {'word':'glove', 'elmo':'','flair':'mix', 'bert':'bert-base-uncased','gpt':'openai-gpt','gpt2':'gpt2','roberta':'distilroberta-base'}
 
 example_sent = ["the doctor invited the patient for lunch",
@@ -74,18 +100,6 @@ def runComp(main, similar, embeddings):
         
     return similarities
     
-    #elmo_embedding.embed(a)
-    #elmo_embedding.embed(b)
-    #cos2 = torch.nn.CosineSimilarity(dim=0, eps=1e-6)
-    #prox2 = cos2(a.embedding, b.embedding)
-    #similarities2 = round(prox2.item(), 4)
-    
-    
-    #st.text('Below you see the similarity between the two sentences you entered:')
-    
-    
-    #st.json({'Bert':similarities1,'ELMo':similarities2})
-    #return
 
 
 
