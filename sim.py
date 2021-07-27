@@ -8,26 +8,32 @@ from stability import similarWords, stability
 from nltk.corpus import brown
 from gensim.models import word2vec
 #### Static Word Embeddings Code below ####
-sentences = brown.sents()
-sentences = [[word.lower() for word in sentence] for sentence in sentences]
-
-model1 = word2vec.Word2Vec(sentences, size=100,window=5,min_count=1, seed=42)
-model2 = word2vec.Word2Vec(sentences, size=100,window=5,min_count=1, seed=102)
-
-all_words = set([word for sentence in sentences for word in sentence])
-
-model1_dict = {}
-model2_dict = {}
-
-for word in all_words:
-    model1_dict[word] = model1.wv[word]
-    model2_dict[word] = model2.wv[word]
-
-mostSimilar1 = similarWords(model1_dict,'president')
-mostSimilar2 = similarWords(model2_dict,'president')
-
-stab = stability('president',[mostSimilar1,mostSimilar2],[mostSimilar1,mostSimilar2],True)
-print('"president" has a sability of ' + str(stab*10) + '%')
+def calcSim(exampleWord):
+    sentences = brown.sents()
+    sentences = [[word.lower() for word in sentence] for sentence in sentences]
+    
+    model1 = word2vec.Word2Vec(sentences, size=100,window=5,min_count=1, seed=42)
+    model2 = word2vec.Word2Vec(sentences, size=100,window=5,min_count=1, seed=102)
+    
+    all_words = set([word for sentence in sentences for word in sentence])
+    
+    model1_dict = {}
+    model2_dict = {}
+    
+    for word in all_words:
+        model1_dict[word] = model1.wv[word]
+        model2_dict[word] = model2.wv[word]
+    
+    mostSimilar1 = similarWords(model1_dict,exampleWord)
+    mostSimilar2 = similarWords(model2_dict,exampleWord)
+    
+    stab = stability(exampleWord,[mostSimilar1,mostSimilar2],[mostSimilar1,mostSimilar2],True)
+    st.text('"' + exampleWord + '" has a sability of ' + str(stab*10) + '%')
+    return stab
+    
+main_word = st.text_input(f"Write a word","president")
+if st.button('Show Stability'):
+    calcSim(main_word)
 
 #### Contextual Word Embeddings Code below ####
 embedding_list = {'word':'glove', 'elmo':'','flair':'mix', 'bert':'bert-base-uncased','gpt':'openai-gpt','gpt2':'gpt2','roberta':'distilroberta-base'}
@@ -63,7 +69,6 @@ def load_embeddings(etype):
         
 cols = st.beta_columns(len(embedding_list))
 check_boxes = [cols[i].checkbox(name) for i, name in enumerate(embedding_list)]
-
 
 
 main_sentence = st.text_input(f"Write a sentence", "The grass is green.")
@@ -113,6 +118,7 @@ if st.button('Run'):
         
     if similarities:
         plot(similarities, checked_names)
+    
         
             
     
